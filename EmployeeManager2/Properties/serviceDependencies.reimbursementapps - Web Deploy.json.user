@@ -1,0 +1,34 @@
+{
+  "dependencies": {
+    "mssql2": {
+      "restored": true,
+      "restoreTime": "2021-01-18T17:28:26.2972618Z"
+    },
+    "mssql1": {
+      "restored": true,
+      "restoreTime": "2021-01-18T17:29:02.9134403Z"
+    }
+  },
+  "parameters": {
+    "mssql2.subscriptionId": {
+      "Name": "mssql2.subscriptionId",
+      "Type": "subscription",
+      "Value": "9154aa33-e8dc-4ba6-958e-720d6cd11c4a"
+    },
+    "mssql2.resourceGroupName": {
+      "Name": "mssql2.resourceGroupName",
+      "Type": "resourceGroup",
+      "Value": "Reimbursementgroup"
+    },
+    "mssql1.subscriptionId": {
+      "Name": "mssql1.subscriptionId",
+      "Type": "subscription",
+      "Value": "9154aa33-e8dc-4ba6-958e-720d6cd11c4a"
+    },
+    "mssql1.resourceGroupName": {
+      "Name": "mssql1.resourceGroupName",
+      "Type": "resourceGroup",
+      "Value": "Reimbursementgroup"
+    }
+  }
+}
