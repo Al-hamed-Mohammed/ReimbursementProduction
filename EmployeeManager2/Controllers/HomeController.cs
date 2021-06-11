@@ -277,7 +277,8 @@ namespace EmployeeManager2.Controllers
                     {
                         foreach (IFormFile photo in model.Photos)
                         {
-                            uniqueFileName = await imageService.UploadImageAsync(photo);                            
+                            uniqueFileName = await imageService.UploadImageAsync(photo);
+                            await imageService.DeleteImageAsync(model.ExistingPhotoPath);
                         }
                     }
                     else
@@ -300,7 +301,6 @@ namespace EmployeeManager2.Controllers
                     _employeeRepository.Update(newEmployee);
 
                     // Deleting image from blob
-                    await imageService.DeleteImageAsync(model.ExistingPhotoPath);
                     return RedirectToAction("details", new { id = newEmployee.Id });
                 }
             }
