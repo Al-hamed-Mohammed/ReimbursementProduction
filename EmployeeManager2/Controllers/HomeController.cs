@@ -12,6 +12,8 @@ using System.IO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using EmployeeManager2.Data;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace EmployeeManager2.Controllers
 {
@@ -20,7 +22,7 @@ namespace EmployeeManager2.Controllers
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IHostingEnvironment hostingEnvironment;
-
+        ImageService imageService = new ImageService();
         public HomeController(IEmployeeRepository employeeRepository,
                               IHostingEnvironment hostingEnvironment)
         {
@@ -37,6 +39,8 @@ namespace EmployeeManager2.Controllers
                 var total = _employeeRepository.GetAllEmployee().Sum(s => s.ReceiptAmount);
 
                 ViewBag.total = total.ToString();
+                ViewBag.url = imageService.BlobUrl() + "/";
+
                 return View(model);
             }
             catch (Exception ex)
@@ -58,6 +62,7 @@ namespace EmployeeManager2.Controllers
                     Employee = _employeeRepository.GetEmployee(id),
                     PageTitle = "Employee Details"
                 };
+                homeDetailsViewModel.Employee.PhotoPath = imageService.BlobUrl() + "/" + homeDetailsViewModel.Employee.PhotoPath;
                 return View(homeDetailsViewModel);
             }
             catch (Exception ex)
@@ -87,7 +92,7 @@ namespace EmployeeManager2.Controllers
                     Name = employee.Name,
                     Email = employee.Email,
                     Department = employee.Department,
-                    ExistingPhotoPath = employee.PhotoPath,
+                    ExistingPhotoPath = imageService.BlobUrl() + "/" + employee.PhotoPath,
                     ReceiptDate = employee.ReceiptDate,
                     ReimburseDate = employee.ReimburseDate,
                     ReceiptAmount = employee.ReceiptAmount
@@ -103,13 +108,17 @@ namespace EmployeeManager2.Controllers
 
         [HttpGet]
         [Authorize(Roles = UtilityClass.AdminUserRole)]
-        public ActionResult delete(int id)
+        public async Task<ActionResult> delete(int id)
         {
             try
             {
                 if (id > 0 || !string.IsNullOrWhiteSpace(id.ToString()))
                 {
+                    var emp = _employeeRepository.GetEmployee(id);
                     _employeeRepository.Delete(id);
+
+                    // Delete Image from Blob
+                    await imageService.DeleteImageAsync(emp.PhotoPath);
                     TempData["Message"] = "Record Deleted Succesfully";
                     TempData.Keep();
                     return RedirectToAction("Index");
@@ -219,7 +228,7 @@ namespace EmployeeManager2.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(EmployeeCreateViewModel model)
+        public async Task<IActionResult> Create(EmployeeCreateViewModel model)
         {
             try
             {
@@ -230,10 +239,7 @@ namespace EmployeeManager2.Controllers
                     {
                         foreach (IFormFile photo in model.Photos)
                         {
-                            string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "Images");
-                            uniqueFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
-                            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                            photo.CopyTo(new FileStream(filePath, FileMode.Create));
+                            uniqueFileName = await imageService.UploadImageAsync(photo);
                         }
                     }
 
@@ -260,7 +266,7 @@ namespace EmployeeManager2.Controllers
         }
         [HttpPost]
         [Authorize(Roles = UtilityClass.AdminUserRole)]
-        public IActionResult Edit(EmployeeCreateViewModel model)
+        public async Task<IActionResult> Edit(EmployeeCreateViewModel model)
         {
             try
             {
@@ -271,10 +277,8 @@ namespace EmployeeManager2.Controllers
                     {
                         foreach (IFormFile photo in model.Photos)
                         {
-                            string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "Images");
-                            uniqueFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
-                            string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                            photo.CopyTo(new FileStream(filePath, FileMode.Create));
+                            uniqueFileName = await imageService.UploadImageAsync(photo);
+                            await imageService.DeleteImageAsync(model.ExistingPhotoPath);
                         }
                     }
                     else
@@ -295,6 +299,8 @@ namespace EmployeeManager2.Controllers
                     };
 
                     _employeeRepository.Update(newEmployee);
+
+                    // Deleting image from blob
                     return RedirectToAction("details", new { id = newEmployee.Id });
                 }
             }

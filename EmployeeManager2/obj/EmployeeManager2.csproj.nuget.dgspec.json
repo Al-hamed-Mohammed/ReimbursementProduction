@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\New folder\\IMCES-Employee-Management-system-Production\\EmployeeManager2\\EmployeeManager2.csproj": {}
+    "C:\\Users\\Naeem\\Documents\\GitHub\\ReimbursementProduction\\EmployeeManager2\\EmployeeManager2.csproj": {}
   },
   "projects": {
-    "D:\\New folder\\IMCES-Employee-Management-system-Production\\EmployeeManager2\\EmployeeManager2.csproj": {
+    "C:\\Users\\Naeem\\Documents\\GitHub\\ReimbursementProduction\\EmployeeManager2\\EmployeeManager2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\New folder\\IMCES-Employee-Management-system-Production\\EmployeeManager2\\EmployeeManager2.csproj",
+        "projectUniqueName": "C:\\Users\\Naeem\\Documents\\GitHub\\ReimbursementProduction\\EmployeeManager2\\EmployeeManager2.csproj",
         "projectName": "EmployeeManager2",
-        "projectPath": "D:\\New folder\\IMCES-Employee-Management-system-Production\\EmployeeManager2\\EmployeeManager2.csproj",
-        "packagesPath": "C:\\Users\\Mohammed\\.nuget\\packages\\",
-        "outputPath": "D:\\New folder\\IMCES-Employee-Management-system-Production\\EmployeeManager2\\obj\\",
+        "projectPath": "C:\\Users\\Naeem\\Documents\\GitHub\\ReimbursementProduction\\EmployeeManager2\\EmployeeManager2.csproj",
+        "packagesPath": "C:\\Users\\Naeem\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Naeem\\Documents\\GitHub\\ReimbursementProduction\\EmployeeManager2\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Mohammed\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Naeem\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -70,6 +70,10 @@
               "target": "Package",
               "version": "[4.2.0, )"
             },
+            "WindowsAzure.Storage": {
+              "target": "Package",
+              "version": "[9.3.3, )"
+            },
             "jQuery.Validation": {
               "target": "Package",
               "version": "[1.19.2, )"
@@ -89,12 +93,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[3.1.13, 3.1.13]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -103,7 +101,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.104\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.101\\RuntimeIdentifierGraph.json"
         }
       }
     }
