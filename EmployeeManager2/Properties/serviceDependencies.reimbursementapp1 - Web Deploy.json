@@ -1,15 +1,15 @@
 {
   "dependencies": {
-    "mssql2": {
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/reimbursementapp/databases/reimbursmentnewDB1",
-      "type": "mssql.azure",
-      "connectionId": "EmployeeDBConnection",
-      "secretStore": "AzureAppSettings"
-    },
     "mssql1": {
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/reimbursementapp/databases/reimbursmentnewDB1",
       "type": "mssql.azure",
       "connectionId": "AuthDbContextConnection",
+      "secretStore": "AzureAppSettings"
+    },
+    "mssql2": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/reimbursementapp/databases/reimbursmentnewDB1",
+      "type": "mssql.azure",
+      "connectionId": "EmployeeDBConnection",
       "secretStore": "AzureAppSettings"
     },
     "storage1": {

@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Naeem\\Documents\\GitHub\\ReimbursementProduction\\EmployeeManager2\\EmployeeManager2.csproj": {}
+    "D:\\VTT\\Projects\\ReimbursementProduction\\EmployeeManager2\\EmployeeManager2.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Naeem\\Documents\\GitHub\\ReimbursementProduction\\EmployeeManager2\\EmployeeManager2.csproj": {
+    "D:\\VTT\\Projects\\ReimbursementProduction\\EmployeeManager2\\EmployeeManager2.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Naeem\\Documents\\GitHub\\ReimbursementProduction\\EmployeeManager2\\EmployeeManager2.csproj",
+        "projectUniqueName": "D:\\VTT\\Projects\\ReimbursementProduction\\EmployeeManager2\\EmployeeManager2.csproj",
         "projectName": "EmployeeManager2",
-        "projectPath": "C:\\Users\\Naeem\\Documents\\GitHub\\ReimbursementProduction\\EmployeeManager2\\EmployeeManager2.csproj",
-        "packagesPath": "C:\\Users\\Naeem\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Naeem\\Documents\\GitHub\\ReimbursementProduction\\EmployeeManager2\\obj\\",
+        "projectPath": "D:\\VTT\\Projects\\ReimbursementProduction\\EmployeeManager2\\EmployeeManager2.csproj",
+        "packagesPath": "C:\\Users\\Mohammed\\.nuget\\packages\\",
+        "outputPath": "D:\\VTT\\Projects\\ReimbursementProduction\\EmployeeManager2\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Naeem\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Mohammed\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -40,6 +40,18 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "dependencies": {
+            "Azure.Storage.Blobs": {
+              "target": "Package",
+              "version": "[12.3.0, )"
+            },
+            "Azure.Storage.Files.Shares": {
+              "target": "Package",
+              "version": "[12.1.0, )"
+            },
+            "Azure.Storage.Queues": {
+              "target": "Package",
+              "version": "[12.2.0, )"
+            },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
               "version": "[3.1.6, )"
@@ -61,6 +73,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[3.1.7, )"
+            },
+            "Microsoft.Extensions.Azure": {
+              "target": "Package",
+              "version": "[1.0.0, )"
             },
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
@@ -93,6 +109,12 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[3.1.13, 3.1.13]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -101,7 +123,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.104\\RuntimeIdentifierGraph.json"
         }
       }
     }

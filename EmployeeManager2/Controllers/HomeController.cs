@@ -172,6 +172,7 @@ namespace EmployeeManager2.Controllers
                     var total1 = _employeeRepository.SearchwithdateAndName(name, from, to).Sum(s => s.ReceiptAmount);
 
                     ViewBag.total = total1.ToString();
+                    ViewBag.url = imageService.BlobUrl() + "/";
                     return View("Index", model);
                 }
 
@@ -187,6 +188,7 @@ namespace EmployeeManager2.Controllers
                         var total1 = _employeeRepository.SearchwithdateAndName(name, viewbagfromdate, viewbagtodate).Sum(s => s.ReceiptAmount);
 
                         ViewBag.total = total1.ToString();
+                        ViewBag.url = imageService.BlobUrl() + "/";
                         HttpContext.Session.SetString("datefilterflag", "false");
                         return View("Index", model);
                     }
@@ -197,6 +199,7 @@ namespace EmployeeManager2.Controllers
                         var total1 = _employeeRepository.SearchEmployee(name).Sum(s => s.ReceiptAmount);
 
                         ViewBag.total = total1.ToString();
+                        ViewBag.url = imageService.BlobUrl() + "/";
                         return View("Index", model);
                     }
                 }
@@ -215,6 +218,7 @@ namespace EmployeeManager2.Controllers
 
 
                     ViewBag.total = total1.ToString();
+                    ViewBag.url = imageService.BlobUrl() + "/";
                     return View("Index", model);
                 }
 
