@@ -1,12 +1,16 @@
 {
   "dependencies": {
+    "mssql1": {
+      "type": "mssql",
+      "connectionId": "AuthDbContextConnection"
+    },
     "mssql2": {
       "type": "mssql",
       "connectionId": "EmployeeDBConnection"
     },
-    "mssql1": {
-      "type": "mssql",
-      "connectionId": "AuthDbContextConnection"
+    "storage1": {
+      "type": "storage",
+      "connectionId": "reimbursmentstorage"
     }
   }
 }
