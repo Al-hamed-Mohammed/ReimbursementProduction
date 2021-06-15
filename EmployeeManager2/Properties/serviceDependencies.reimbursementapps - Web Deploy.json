@@ -13,10 +13,17 @@
       "secretStore": "AzureAppSettings"
     },
     "storage1": {
+<<<<<<< Updated upstream
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Storage/storageAccounts/reimbursmentstorage",
       "type": "storage.azure",
       "connectionId": "reimbursmentstorage",
       "secretStore": "AzureAppSettings"
+=======
+      "type": "storage",
+      "connectionId": "",
+      "suggestion": "true",
+      "ignored": "true"
+>>>>>>> Stashed changes
     }
   }
 }
