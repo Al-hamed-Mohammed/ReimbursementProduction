@@ -23,6 +23,7 @@ namespace EmployeeManager2.Models
         [Required]
         public Dept? Department { get; set; }
 
+        public string ClientNumber { get; set; }
         public DateTime? ReimburseDate { get; set; }
         public DateTime? ReceiptDate { get; set; }
 
