@@ -20,6 +20,7 @@
                 <h4>Employee ID:  @Model.Employee.Id</h4>
                 <h4>Email:  @Model.Employee.Email</h4>
                 <h4>Department:  @Model.Employee.Department</h4>
+                <h4>Client Number:  @Model.Employee.ClientNumber</h4>
                 @if (Model.Employee.ReceiptDate.HasValue)
                 {
                     <h4>Receipt Date:   @Model.Employee.ReceiptDate.Value.ToString("MM-dd-yyyy")</h4>
@@ -31,7 +32,7 @@
                 @if (Model.Employee.ReimburseDate.HasValue)
                 {
                     <h4>Reimburse Date:   @Model.Employee.ReimburseDate.Value.ToString("MM-dd-yyyy") </h4>
-                    
+
                 }
                 else
                 {

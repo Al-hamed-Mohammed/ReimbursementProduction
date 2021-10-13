@@ -25,6 +25,8 @@ namespace EmployeeManager2.ViewModels
         public string Email { get; set; }
         [Required]
         public Dept? Department { get; set; }
+        [Display(Name = "Client Number")]
+        public string ClientNumber { get; set; }
         public DateTime? ReimburseDate { get; set; }
         public DateTime? ReceiptDate { get; set; }
         public List<IFormFile> Photos { get; set; }
