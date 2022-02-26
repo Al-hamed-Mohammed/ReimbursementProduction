@@ -1,0 +1,36 @@
+﻿
+
+@{
+    ViewData["Title"] = "Accountant";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h1 class="text-center">Accountant Tab</h1>
+
+<div>
+    <p><h4>Upload Excel File</h4></p>
+    <p>Supported File Format <b>xlsx</b></p>
+    @using (Html.BeginForm("ImportExcelFile", "Accountant", FormMethod.Post,
+     new { enctype = "multipart/form-data", onsubmit = "theButton.disabled = true; return true;" }))
+    {
+        <input type="file" name="FormFile" id="FormFile">
+        <input id="CopyToDb" class="btn btn-primary mb-2" style="width:auto;" type="submit" value="Copy to Database" />
+    }
+    <p class="text-danger">@ViewBag.ErrorMessage</p>
+</div>
+<div>    
+    <ejs-grid id="Grid" allowPaging="true" toolbar="@(new List<string>()
+                    { "Edit", "Delete", "Cancel", "Update", })">
+        <e-data-manager url="/Accountant/UrlDataSource" updateUrl="/Accountant/Update" removeUrl="/Accountant/Delete"
+                        adaptor="UrlAdaptor"></e-data-manager>        
+        <e-grid-editsettings allowDeleting="true" allowEditing="true"></e-grid-editsettings>
+        <e-grid-columns>
+            <e-grid-column field="Id" headerText="Id" isPrimaryKey="true" width="35"></e-grid-column>
+            <e-grid-column field="Date" headerText="Date" editType="datepickeredit" format="yMd"></e-grid-column>
+            <e-grid-column field="Transaction" headerText="Transaction" width="150"></e-grid-column>
+            <e-grid-column field="Description" headerText="Description" width="160"></e-grid-column>
+            <e-grid-column field="Category" headerText="Category"></e-grid-column>
+            <e-grid-column field="Debit" headerText="Debit" editType="numericedit"></e-grid-column>
+            <e-grid-column field="Credit" headerText="Credit" editType="numericedit"></e-grid-column>
+        </e-grid-columns>
+    </ejs-grid>    
+</div>

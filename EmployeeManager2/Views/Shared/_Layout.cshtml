@@ -13,7 +13,7 @@
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQOcWr7x9JvoRxT2MZw1T"
               crossorigin="anonymous"
               asp-fallback-href="~/lib/bootstrap/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only";
+              asp-fallback-test-class="sr-only" ;
               asp-fallback-test-property="position"
               asp-fallback-test-value="absolute"
               asp-suppress-fallback-integrity="true" />
@@ -23,6 +23,11 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
     <link rel="stylesheet" href="~/css/site.css" />
+    @* Syncfusion Essential JS 2 Styles *@
+    <link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/material.css" />
+
+    @* Syncfusion Essential JS 2 Scripts *@
+    <script src="https://cdn.syncfusion.com/ej2/dist/ej2.min.js"></script>
 </head>
 <body>
     <header style="background-color:#012E52; font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
@@ -57,6 +62,9 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="nav-item">
+                            <a class="nav-link text-white" asp-area="" asp-controller="Accountant" asp-action="Index">Accountants Tab</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="TimeSheet" asp-action="Index">TimeSheet App</a>
                         </li>
                         <li class="nav-item">
@@ -72,14 +80,14 @@
 
         </nav>
 
-       
+
     </header>
-    <header style="margin-top:-15px;background:#0E5A91;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif" >
+    <header style="margin-top:-15px;background:#0E5A91;font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif">
         <nav class="navbar navbar-expand-sm navbar-right navbar-toggleable-sm navbar-white  border-bottom box-shadow mb-3">
             <div class="container">
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial.cshtml" />
-                   
+
                 </div>
             </div>
         </nav>
@@ -113,6 +121,6 @@
 
 
     </script>
-
+    <ejs-scripts></ejs-scripts>
 </body>
 </html>

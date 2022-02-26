@@ -15,9 +15,10 @@ namespace EmployeeManager2.Areas.Identity
     {
         public void Configure(IWebHostBuilder builder)
         {
-            builder.ConfigureServices((context, services) => {
+            builder.ConfigureServices((context, services) =>
+            {
                 services.AddDbContext<AuthDbContext>(options =>
-                    options.UseSqlServer(
+                options.UseSqlServer(
                         context.Configuration.GetConnectionString("AuthDbContextConnection")));
 
                 services.AddDefaultIdentity<AppUsers>(options => options.SignIn.RequireConfirmedAccount = false)
@@ -25,7 +26,7 @@ namespace EmployeeManager2.Areas.Identity
                 .AddRoleManager<RoleManager<IdentityRole>>()
                 .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<AuthDbContext>();
-                    
+
             });
         }
     }
