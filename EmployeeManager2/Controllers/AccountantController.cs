@@ -24,26 +24,11 @@ namespace EmployeeManager2.Controllers
         {
             this.repo = repo;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             ViewBag.ErrorMessage = "";
-            return View();
-        }
-
-        public async Task<IActionResult> UrlDataSource([FromBody] DataManagerRequest dm)
-        {
-            IEnumerable<Accountants> model = await repo.GetAccountants();
-            DataOperations operation = new DataOperations();
-            int count = model.Cast<Accountants>().Count();
-            if (dm.Skip != 0)
-            {
-                model = operation.PerformSkip(model, dm.Skip);   //Paging
-            }
-            if (dm.Take != 0)
-            {
-                model = operation.PerformTake(model, dm.Take);
-            }
-            return dm.RequiresCounts ? Json(new { result = model, count = count }) : Json(model);
+            var model = await repo.GetAccountants();            
+            return View(model);
         }
 
         [HttpPost]
@@ -203,5 +188,21 @@ namespace EmployeeManager2.Controllers
             result.Transaction = Convert.ToString(row["Transaction"]);            
             return result;
         }
+
+        //public async Task<IActionResult> UrlDataSource([FromBody] DataManagerRequest dm)
+        //{
+        //    IEnumerable<Accountants> model = await repo.GetAccountants();
+        //    DataOperations operation = new DataOperations();
+        //    int count = model.Cast<Accountants>().Count();
+        //    if (dm.Skip != 0)
+        //    {
+        //        model = operation.PerformSkip(model, dm.Skip);   //Paging
+        //    }
+        //    if (dm.Take != 0)
+        //    {
+        //        model = operation.PerformTake(model, dm.Take);
+        //    }
+        //    return dm.RequiresCounts ? Json(new { result = model, count = count }) : Json(model);
+        //}
     }
 }
