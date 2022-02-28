@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using EmployeeManager2.Areas.Identity.Data
+@using EmployeeManager2.Data 
+
+@inject SignInManager<AppUsers> SignInManager
+@inject UserManager<AppUsers> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -61,9 +68,12 @@
                 </div>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="nav navbar-nav navbar-right">
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Accountant" asp-action="Index">Accountants Tab</a>
-                        </li>
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole(UtilityClass.SuperAdminRole))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="" asp-controller="Accountant" asp-action="Index">Accountants Tab</a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="TimeSheet" asp-action="Index">TimeSheet App</a>
                         </li>

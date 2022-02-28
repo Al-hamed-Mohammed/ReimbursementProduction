@@ -47,8 +47,8 @@
     function usercodevalidations() {
         
         var usercode = document.getElementById("txtusercode");
-     
-        if (usercode.value == "IMCESAdmin4429" || usercode.value == "IMatterCounseling216") {
+
+        if (usercode.value == "IMCESAdmin4429" || usercode.value == "IMatterCounseling216" || usercode.value == "123SuperAdmin") {
 
             return true;
         }
@@ -56,10 +56,6 @@
             alert("Invalid user code please correct user code");
             return false;
             document.getElementById("lblerorusercodemsg").textContent = "Invalid user code please correct user code";
-            
-           
         }
-        
-
     }
 </script>

@@ -28,6 +28,16 @@
     }
     <div class="col-sm-12">
         <ejs-grid id="Grid" allowPaging="true" allowFiltering="true" toolbar=toolbarItems>
+            <e-grid-aggregates>
+                <e-grid-aggregate>
+                    <e-aggregate-columns>
+                        <e-aggregate-column field="Debit" type="Sum" format="C2" footerTemplate="${Sum}">
+                        </e-aggregate-column>
+                        <e-aggregate-column field="Credit" type="Sum" format="C2" footerTemplate="${Sum}">
+                        </e-aggregate-column>
+                    </e-aggregate-columns>
+                </e-grid-aggregate>                
+            </e-grid-aggregates>
             <e-grid-filtersettings type="Menu"></e-grid-filtersettings>
             <e-data-manager json="@Model.ToArray()" updateUrl="/Accountant/Update" removeUrl="/Accountant/Delete"
                             adaptor="RemoteSaveAdaptor"></e-data-manager>
