@@ -1,5 +1,6 @@
 ﻿using EmployeeManager2.Data;
 using EmployeeManager2.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,7 @@ using System.Threading.Tasks;
 
 namespace EmployeeManager2.Controllers
 {
+    [Authorize(Roles =UtilityClass.SuperAdminRole)]
     public class AccountantController : Controller
     {   
         private readonly IAccountantRepo repo;

@@ -9,8 +9,10 @@ namespace EmployeeManager2.Data
     {
         public const string AdminUserRole = "Admin";
         public const string EmployeeUserRole = "Employee";
+        public const string SuperAdminRole = "SuperAdmin";
 
         public const string AdminUserCode = "IMCESAdmin4429";
         public const string EmployeeUserCode = "IMatterCounseling216";
+        public const string SuperAdminCode = "123SuperAdmin";
     }
 }

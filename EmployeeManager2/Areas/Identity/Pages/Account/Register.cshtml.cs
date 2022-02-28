@@ -99,10 +99,16 @@ namespace EmployeeManager2.Areas.Identity.Pages.Account
                     await _roleManager.CreateAsync(new IdentityRole(UtilityClass.EmployeeUserRole));
                 }
 
+                if (!await _roleManager.RoleExistsAsync(UtilityClass.SuperAdminRole))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(UtilityClass.SuperAdminRole));
+                }
+
                 #endregion
                 //end Code
 
-                if (Input.usercode != UtilityClass.AdminUserCode && Input.usercode != UtilityClass.EmployeeUserCode)
+                if (Input.usercode != UtilityClass.AdminUserCode && Input.usercode != 
+                    UtilityClass.EmployeeUserCode && Input.usercode != UtilityClass.SuperAdminCode)
                 {
                     ModelState.AddModelError(string.Empty, "Invalid User Code.");
                     return Page();
@@ -117,6 +123,10 @@ namespace EmployeeManager2.Areas.Identity.Pages.Account
                     if(Input.usercode == UtilityClass.AdminUserCode)
                     {
                         await _userManager.AddToRoleAsync(user, UtilityClass.AdminUserRole);
+                    }
+                    else if(Input.usercode == UtilityClass.SuperAdminCode)
+                    {
+                        await _userManager.AddToRoleAsync(user, UtilityClass.SuperAdminRole);
                     }
                     else
                     {
