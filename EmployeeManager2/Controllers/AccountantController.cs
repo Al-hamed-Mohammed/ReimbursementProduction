@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using Syncfusion.EJ2.Base;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
+
 namespace EmployeeManager2.Controllers
 {
     [Authorize(Roles =UtilityClass.SuperAdminRole)]
@@ -22,9 +24,12 @@ namespace EmployeeManager2.Controllers
     {   
         private readonly IAccountantRepo repo;
 
-        public AccountantController(IAccountantRepo repo)
+        public IConfiguration Configuration { get; }
+
+        public AccountantController(IAccountantRepo repo, IConfiguration configuration)
         {
             this.repo = repo;
+            Configuration = configuration;
         }
         public async Task<IActionResult> Index()
         {
@@ -151,11 +156,20 @@ namespace EmployeeManager2.Controllers
                 }
                 dt.Columns.Remove("DebitCredit");
 
-                List<Accountants> accountants = ConvertDataTable(dt);
-                if(accountants.Count>0)
-                {                    
-                    await repo.Add(accountants);
-                }
+                string connection = Configuration.GetConnectionString("EmployeeDBConnection");
+                
+                using (var sqlCopy = new SqlBulkCopy(connection))
+                {
+                    sqlCopy.DestinationTableName = "[Accountants]";
+                    sqlCopy.ColumnMappings.Add("Category", "Category");
+                    sqlCopy.ColumnMappings.Add("Credit", "Credit");
+                    sqlCopy.ColumnMappings.Add("Date", "Date");
+                    sqlCopy.ColumnMappings.Add("Debit", "Debit");
+                    sqlCopy.ColumnMappings.Add("Description", "Description");
+                    sqlCopy.ColumnMappings.Add("Transaction", "Transaction");
+                    sqlCopy.BatchSize = 500;
+                    sqlCopy.WriteToServer(dt);
+                }                
             }
             else
             {
