@@ -11,23 +11,34 @@
         <p><h4>Upload Excel File</h4></p>
         <p>Supported File Format <b>xlsx</b></p>
         @using (Html.BeginForm("ImportExcelFile", "Accountant", FormMethod.Post,
-      new { enctype = "multipart/form-data", onsubmit = "theButton.disabled = true; return true;" }))
+   new { enctype = "multipart/form-data", onsubmit = "theButton.disabled = true; return true;" }))
         {
             <input type="file" name="FormFile" id="FormFile">
             <input id="CopyToDb" class="btn btn-primary mb-2" style="width:auto;" type="submit" value="Copy to Database" />
         }
         <p class="text-danger">@ViewBag.ErrorMessage</p>
     </div>
+
+    <div class="col-sm-6">
+
+    </div>
+    <div class="col-sm-6 text-right">
+        <label id="debitSum" class="mr-3"></label>
+        <label id="creditSum"></label>
+        @*<input type="text" id="debitSum" />
+            <input type="text" id="creditSum" />*@
+    </div>
+
     @{
         List<object> toolbarItems = new List<object>();
         toolbarItems.Add("Edit");
         toolbarItems.Add("Delete");
-        //toolbarItems.Add("Update");
-        //toolbarItems.Add("Cancel");
+        toolbarItems.Add("Update");
+        toolbarItems.Add("Cancel");
         //toolbarItems.Add(new { text = "Clear Filter", tooltipText = "Clear Filter", id = "Click", align = "Right" });
     }
     <div class="col-sm-12">
-        <ejs-grid id="Grid" allowPaging="true" allowFiltering="true" toolbar=toolbarItems>
+        <ejs-grid id="Grid" dataBound="dataBound" allowPaging="true" allowFiltering="true" toolbar=toolbarItems>
             <e-grid-aggregates>
                 <e-grid-aggregate>
                     <e-aggregate-columns>
@@ -36,7 +47,7 @@
                         <e-aggregate-column field="Credit" type="Sum" format="C2" footerTemplate="${Sum}">
                         </e-aggregate-column>
                     </e-aggregate-columns>
-                </e-grid-aggregate>                
+                </e-grid-aggregate>
             </e-grid-aggregates>
             <e-grid-filtersettings type="Menu"></e-grid-filtersettings>
             <e-data-manager json="@Model.ToArray()" updateUrl="/Accountant/Update" removeUrl="/Accountant/Delete"
@@ -53,5 +64,18 @@
                 <e-grid-column field="Credit" headerText="Credit" editType="numericedit"></e-grid-column>
             </e-grid-columns>
         </ejs-grid>
-    </div>    
+    </div>
 </div>
+<style>    
+</style>
+<script>
+    function dataBound(e) {
+        var grid = document.getElementById('Grid').ej2_instances[0];
+        var field = 'Debit';
+        var field2 = 'Credit';
+        document.getElementById('debitSum').innerText = 'Total Debit: ' + grid.aggregateModule.footerRenderer.aggregates.aggregates[field + ' - sum'].toFixed(2);
+        document.getElementById('creditSum').innerText = 'Total Credit: ' + grid.aggregateModule.footerRenderer.aggregates.aggregates[field2 + ' - sum'].toFixed(2);
+        //grid.getColumnHeaderByField(field).querySelector('.e-headertext').innerText =
+        //    field + ' ' + grid.aggregateModule.footerRenderer.aggregates.aggregates[field + ' - sum'];
+    }
+</script>
