@@ -15,14 +15,11 @@ namespace EmployeeManager2.Models
             this.context = context;
         }
 
-        public async Task<Accountants> Add(List<Accountants> accountant)
+        public async Task<Accountants> Add(Accountants accountant)
         {
-            foreach(Accountants a in accountant)
-            {
-                await context.Accountants.AddAsync(a);
-            }
+            await context.Accountants.AddAsync(accountant);
             await context.SaveChangesAsync();
-            return accountant[0];
+            return accountant;
         }
 
         public async Task DeleteAccountant(int id)

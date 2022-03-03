@@ -7,7 +7,7 @@ namespace EmployeeManager2.Models
 {
     public interface IAccountantRepo
     {
-        Task<Accountants> Add(List<Accountants> accountant);
+        Task<Accountants> Add(Accountants accountant);
         Task<List<Accountants>> GetAccountants();
         Task<Accountants> UpdateAccountant(Accountants accountant);
         Task<Accountants> GetAccountant(int id);

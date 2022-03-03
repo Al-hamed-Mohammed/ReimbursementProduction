@@ -38,6 +38,14 @@ namespace EmployeeManager2.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult>Add([FromBody] ICRUDModel<Accountants> value)
+        {   
+            //value is coming null. Need to check
+            var accountant = value.value;
+            await repo.Add(accountant);
+            return (RedirectToAction("Index"));
+        }
+
         [HttpPost]
         public async Task<IActionResult> Update([FromBody] ICRUDModel<Accountants> value)
         {
@@ -176,7 +184,12 @@ namespace EmployeeManager2.Controllers
                 ViewBag.ErrorMessage = "Excel do not contain the column with name DebitCredit. \n Excel Should have these columns in this order only 'Date' 'Transaction' 'Description' 'Category' 'DebitCredit'";
                 return View("Index");
             }
-            
+            FileInfo file = new FileInfo(filePath);
+            if(file.Exists)
+            {
+                file.Delete();
+            }
+
             ViewBag.ErrorMessage = "";
             return RedirectToAction("Index");
         }

@@ -13,6 +13,6 @@ namespace EmployeeManager2.Data
 
         public const string AdminUserCode = "IMCESAdmin4429";
         public const string EmployeeUserCode = "IMatterCounseling216";
-        public const string SuperAdminCode = "123SuperAdmin";
+        public const string SuperAdminCode = "SuperAdminYehezqel4200";
     }
 }
