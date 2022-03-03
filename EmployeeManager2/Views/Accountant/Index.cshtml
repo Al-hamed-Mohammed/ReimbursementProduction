@@ -7,11 +7,11 @@
 <h1 class="text-center">Accountant Tab</h1>
 
 <div class="row">
-    <div class="col-sm-12 text-right">
+    <div class="col-sm-12">
         <p><h4>Upload Excel File</h4></p>
         <p>Supported File Format <b>xlsx</b></p>
         @using (Html.BeginForm("ImportExcelFile", "Accountant", FormMethod.Post,
-   new { enctype = "multipart/form-data", onsubmit = "theButton.disabled = true; return true;" }))
+new { enctype = "multipart/form-data", onsubmit = "theButton.disabled = true; return true;" }))
         {
             <input type="file" name="FormFile" id="FormFile">
             <input id="CopyToDb" class="btn btn-primary mb-2" style="width:auto;" type="submit" value="Copy to Database" />
@@ -29,14 +29,19 @@
             <input type="text" id="creditSum" />*@
     </div>
 
+
+
     @{
+        string[] pagerDropdown = new string[] { "5", "10", "15", "20", "50", "100" };
         List<object> toolbarItems = new List<object>();
+        toolbarItems.Add("Add");
         toolbarItems.Add("Edit");
         toolbarItems.Add("Delete");
-        toolbarItems.Add("Update");
         toolbarItems.Add("Cancel");
+        toolbarItems.Add("Update");
         //toolbarItems.Add(new { text = "Clear Filter", tooltipText = "Clear Filter", id = "Click", align = "Right" });
     }
+
     <div class="col-sm-12">
         <ejs-grid id="Grid" dataBound="dataBound" allowPaging="true" allowFiltering="true" toolbar=toolbarItems>
             <e-grid-aggregates>
@@ -50,10 +55,10 @@
                 </e-grid-aggregate>
             </e-grid-aggregates>
             <e-grid-filtersettings type="Menu"></e-grid-filtersettings>
-            <e-data-manager json="@Model.ToArray()" updateUrl="/Accountant/Update" removeUrl="/Accountant/Delete"
-                            adaptor="RemoteSaveAdaptor"></e-data-manager>
-            <e-grid-editsettings allowDeleting="true" allowEditing="true" mode="Dialog"></e-grid-editsettings>
-            <e-grid-pagesettings pageSize="10"></e-grid-pagesettings>
+            <e-data-manager json="@Model.ToArray()" insertUrl="/Accountant/Add" updateUrl="/Accountant/Update" 
+                            removeUrl="/Accountant/Delete" adaptor="RemoteSaveAdaptor"></e-data-manager>
+            <e-grid-editsettings showDeleteConfirmDialog="true" allowAdding="true" allowDeleting="true" allowEditing="true"></e-grid-editsettings>
+            <e-grid-pagesettings pageSizes="pagerDropdown" pageSize="5"></e-grid-pagesettings>
             <e-grid-columns>
                 <e-grid-column field="Id" headerText="Id" isPrimaryKey="true" width="0"></e-grid-column>
                 <e-grid-column field="Date" headerText="Date" editType="datepickeredit" format="yMd"></e-grid-column>
@@ -66,7 +71,10 @@
         </ejs-grid>
     </div>
 </div>
-<style>    
+<style>
+    .e-grid .e-gridheader {
+        color: black;
+    }
 </style>
 <script>
     function dataBound(e) {
