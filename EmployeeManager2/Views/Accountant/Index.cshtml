@@ -43,7 +43,7 @@ new { enctype = "multipart/form-data", onsubmit = "theButton.disabled = true; re
     }
 
     <div class="col-sm-12">
-        <ejs-grid id="Grid" dataBound="dataBound" allowPaging="true" allowFiltering="true" toolbar=toolbarItems>
+        <ejs-grid id="Grid" actionComplete="actionComplete" dataBound="dataBound" allowPaging="true" allowFiltering="true" toolbar=toolbarItems>
             <e-grid-aggregates>
                 <e-grid-aggregate>
                     <e-aggregate-columns>
@@ -78,6 +78,9 @@ new { enctype = "multipart/form-data", onsubmit = "theButton.disabled = true; re
 </style>
 <script>
     function dataBound(e) {
+        updateTotal();
+    }
+    function updateTotal() {
         var grid = document.getElementById('Grid').ej2_instances[0];
         var field = 'Debit';
         var field2 = 'Credit';
@@ -85,5 +88,17 @@ new { enctype = "multipart/form-data", onsubmit = "theButton.disabled = true; re
         document.getElementById('creditSum').innerText = 'Total Credit: ' + grid.aggregateModule.footerRenderer.aggregates.aggregates[field2 + ' - sum'].toFixed(2);
         //grid.getColumnHeaderByField(field).querySelector('.e-headertext').innerText =
         //    field + ' ' + grid.aggregateModule.footerRenderer.aggregates.aggregates[field + ' - sum'];
+    }
+    function dataBound(args) {
+        updateTotal();
+    }
+
+    function actionComplete(args) {
+        if (args.requestType === 'save' && args.action == "edit") {
+            // The aggregate module is refreshed with the updated data 
+            var grid = document.getElementById('Grid').ej2_instances[0];
+            grid.aggregateModule.refresh(args.data);
+            updateTotal();
+        }
     }
 </script>
