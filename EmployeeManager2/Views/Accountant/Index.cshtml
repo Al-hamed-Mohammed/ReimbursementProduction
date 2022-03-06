@@ -19,8 +19,8 @@ new { enctype = "multipart/form-data", onsubmit = "theButton.disabled = true; re
         <p class="text-danger">@ViewBag.ErrorMessage</p>
     </div>
 
-    <div class="col-sm-6">
-
+    <div class="col-md-6">
+        <a asp-action="Create" style="width:auto; margin-bottom:10px" class="btn btn-primary">Add New Record</a>
     </div>
     <div class="col-sm-6 text-right">
         <label id="debitSum" class="mr-3"></label>

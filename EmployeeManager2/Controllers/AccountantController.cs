@@ -38,10 +38,26 @@ namespace EmployeeManager2.Controllers
             return View(model);
         }
 
+        [HttpPost]
         public async Task<IActionResult>Add([FromBody] ICRUDModel<Accountants> value)
         {   
             //value is coming null. Need to check
             var accountant = value.value;
+            await repo.Add(accountant);
+            return (RedirectToAction("Index"));
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromForm] Accountants value)
+        {
+            //value is coming null. Need to check
+            var accountant = value;
             await repo.Add(accountant);
             return (RedirectToAction("Index"));
         }
@@ -92,8 +108,9 @@ namespace EmployeeManager2.Controllers
             string extension = Path.GetExtension(filename);
             if(extension != ".xlsx")
             {
-                ViewBag.ErrorMessage = "Please upload excel with file extension xlsx only.";                
-                return View("Index");
+                ViewBag.ErrorMessage = "Please upload excel with file extension xlsx only.";
+                var model = await repo.GetAccountants();
+                return View("Index",model);
             }
 
             string conString = string.Empty;
@@ -182,7 +199,8 @@ namespace EmployeeManager2.Controllers
             else
             {
                 ViewBag.ErrorMessage = "Excel do not contain the column with name DebitCredit. \n Excel Should have these columns in this order only 'Date' 'Transaction' 'Description' 'Category' 'DebitCredit'";
-                return View("Index");
+                var model = await repo.GetAccountants();
+                return View("Index", model);
             }
             FileInfo file = new FileInfo(filePath);
             if(file.Exists)
