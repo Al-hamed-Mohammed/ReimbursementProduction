@@ -19,32 +19,50 @@ using System.Threading.Tasks;
 
 namespace EmployeeManager2.Controllers
 {
-    [Authorize(Roles =UtilityClass.SuperAdminRole)]
+    [Authorize(Roles = UtilityClass.SuperAdminRole)]
     public class AccountantController : Controller
-    {   
+    {
         private readonly IAccountantRepo repo;
+        private readonly IInsertErrorLog log;
 
         public IConfiguration Configuration { get; }
 
-        public AccountantController(IAccountantRepo repo, IConfiguration configuration)
+        public AccountantController(IAccountantRepo repo, IConfiguration configuration, IInsertErrorLog log)
         {
             this.repo = repo;
             Configuration = configuration;
+            this.log = log;
         }
         public async Task<IActionResult> Index()
         {
-            ViewBag.ErrorMessage = "";
-            var model = await repo.GetAccountants();            
-            return View(model);
+            try
+            {
+                ViewBag.ErrorMessage = "";
+                var model = await repo.GetAccountants();
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                log.saveerror(ex);
+                return View();
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult>Add([FromBody] ICRUDModel<Accountants> value)
-        {   
-            //value is coming null. Need to check
-            var accountant = value.value;
-            await repo.Add(accountant);
-            return (RedirectToAction("Index"));
+        public async Task<IActionResult> Add([FromBody] ICRUDModel<Accountants> value)
+        {
+            try
+            {
+                //value is coming null. Need to check
+                var accountant = value.value;
+                await repo.Add(accountant);
+                return (RedirectToAction("Index"));
+            }
+            catch (Exception ex)
+            {
+                log.saveerror(ex);
+                return View();
+            }
         }
 
         [HttpGet]
@@ -56,159 +74,188 @@ namespace EmployeeManager2.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] Accountants value)
         {
-            //value is coming null. Need to check
-            var accountant = value;
-            await repo.Add(accountant);
-            return (RedirectToAction("Index"));
+            try
+            {
+                var accountant = value;
+                await repo.Add(accountant);
+                return (RedirectToAction("Index"));
+            }
+            catch (Exception ex)
+            {
+                log.saveerror(ex);
+                return View();
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Update([FromBody] ICRUDModel<Accountants> value)
         {
-            var accountant = value.value;
-            await repo.UpdateAccountant(accountant);
-            return (RedirectToAction("Index"));
+            try
+            {
+                var accountant = value.value;
+                await repo.UpdateAccountant(accountant);
+                return (RedirectToAction("Index"));
+            }
+            catch (Exception ex)
+            {
+                log.saveerror(ex);
+                return View();
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete([FromBody] ICRUDModel<Accountants> value)
         {
-            var id = int.Parse(value.key.ToString());
-            await repo.DeleteAccountant(id);
-            return (RedirectToAction("Index"));
+            try
+            {
+                var id = int.Parse(value.key.ToString());
+                await repo.DeleteAccountant(id);
+                return (RedirectToAction("Index"));
+            }
+            catch (Exception ex)
+            {
+                log.saveerror(ex);
+                return View();
+            }
         }
 
-            [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> ImportExcelFile(IFormFile FormFile)
         {
-            if(FormFile == null)
+            try
             {
-                return RedirectToAction("Index");
-            }
-            //get file name
-            var filename = ContentDispositionHeaderValue.Parse(FormFile.ContentDisposition).FileName.Trim('"');
-
-            //get path
-            var MainPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Uploads");
-
-            //create directory "Uploads" if it doesn't exists
-            if (!Directory.Exists(MainPath))
-            {
-                Directory.CreateDirectory(MainPath);
-            }
-
-            //get file path 
-            var filePath = Path.Combine(MainPath, FormFile.FileName);
-            using (System.IO.Stream stream = new FileStream(filePath, FileMode.Create))
-            {
-                await FormFile.CopyToAsync(stream);
-            }
-
-            //get extension
-            string extension = Path.GetExtension(filename);
-            if(extension != ".xlsx")
-            {
-                ViewBag.ErrorMessage = "Please upload excel with file extension xlsx only.";
-                var model = await repo.GetAccountants();
-                return View("Index",model);
-            }
-
-            string conString = string.Empty;
-
-            switch (extension)
-            {
-                case ".xls": //Excel 97-03.
-                    conString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES'";
-                    break;
-                case ".xlsx": //Excel 07 and above.
-                    conString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES'";
-                    break;
-                case ".xltx": 
-                    conString = "Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES'";
-                    break;
-            }
-
-            DataTable dt = new DataTable();
-            conString = string.Format(conString, filePath);
-
-            using (OleDbConnection connExcel = new OleDbConnection(conString))
-            {
-                using (OleDbCommand cmdExcel = new OleDbCommand())
+                if (FormFile == null)
                 {
-                    using (OleDbDataAdapter odaExcel = new OleDbDataAdapter())
+                    return RedirectToAction("Index");
+                }
+                //get file name
+                var filename = ContentDispositionHeaderValue.Parse(FormFile.ContentDisposition).FileName.Trim('"');
+
+                //get path
+                var MainPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Uploads");
+
+                //create directory "Uploads" if it doesn't exists
+                if (!Directory.Exists(MainPath))
+                {
+                    Directory.CreateDirectory(MainPath);
+                }
+
+                //get file path 
+                var filePath = Path.Combine(MainPath, FormFile.FileName);
+                using (System.IO.Stream stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await FormFile.CopyToAsync(stream);
+                }
+
+                //get extension
+                string extension = Path.GetExtension(filename);
+                if (extension != ".xlsx")
+                {
+                    ViewBag.ErrorMessage = "Please upload excel with file extension xlsx only.";
+                    var model = await repo.GetAccountants();
+                    return View("Index", model);
+                }
+
+                string conString = string.Empty;
+
+                switch (extension)
+                {
+                    case ".xls": //Excel 97-03.
+                        conString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES'";
+                        break;
+                    case ".xlsx": //Excel 07 and above.
+                        conString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES'";
+                        break;
+                    case ".xltx":
+                        conString = "Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES'";
+                        break;
+                }
+
+                DataTable dt = new DataTable();
+                conString = string.Format(conString, filePath);
+
+                using (OleDbConnection connExcel = new OleDbConnection(conString))
+                {
+                    using (OleDbCommand cmdExcel = new OleDbCommand())
                     {
-                        cmdExcel.Connection = connExcel;
+                        using (OleDbDataAdapter odaExcel = new OleDbDataAdapter())
+                        {
+                            cmdExcel.Connection = connExcel;
 
-                        //Get the name of First Sheet.
-                        connExcel.Open();
-                        DataTable dtExcelSchema;
-                        dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
-                        string sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
-                        connExcel.Close();
+                            //Get the name of First Sheet.
+                            connExcel.Open();
+                            DataTable dtExcelSchema;
+                            dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
+                            string sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
+                            connExcel.Close();
 
-                        //Read Data from First Sheet.
-                        connExcel.Open();
-                        cmdExcel.CommandText = "SELECT * From [" + sheetName + "]";
-                        odaExcel.SelectCommand = cmdExcel;
-                        odaExcel.Fill(dt);
-                        connExcel.Close();
+                            //Read Data from First Sheet.
+                            connExcel.Open();
+                            cmdExcel.CommandText = "SELECT * From [" + sheetName + "]";
+                            odaExcel.SelectCommand = cmdExcel;
+                            odaExcel.Fill(dt);
+                            connExcel.Close();
+                        }
                     }
                 }
-            }
-            if(dt.Columns.Contains("DebitCredit") && dt.Columns.Contains("Transaction") && dt.Columns.Contains("Date")
-                 && dt.Columns.Contains("Description") && dt.Columns.Contains("Category"))
-            {
-                dt.Columns.Add("Debit", typeof(decimal));
-                dt.Columns.Add("Credit", typeof(decimal));
-                foreach (DataRow dr in dt.Rows)
+                if (dt.Columns.Contains("DebitCredit") && dt.Columns.Contains("Transaction") && dt.Columns.Contains("Date")
+                     && dt.Columns.Contains("Description") && dt.Columns.Contains("Category"))
                 {
-                    var m = dr.Field<dynamic>("DebitCredit");
-                    if (m != null)
+                    dt.Columns.Add("Debit", typeof(decimal));
+                    dt.Columns.Add("Credit", typeof(decimal));
+                    foreach (DataRow dr in dt.Rows)
                     {
-                        if (m <= 0)
+                        var m = dr.Field<dynamic>("DebitCredit");
+                        if (m != null)
                         {
-                            dr["Debit"] = m;
+                            if (m <= 0)
+                            {
+                                dr["Debit"] = m;
+                            }
+                            else
+                            {
+                                dr["Credit"] = m;
+                            }
                         }
                         else
                         {
-                            dr["Credit"] = m;
+                            dr["Debit"] = 0;
+                            dr["Credit"] = 0;
                         }
                     }
-                    else
+                    dt.Columns.Remove("DebitCredit");
+
+                    string connection = Configuration.GetConnectionString("EmployeeDBConnection");
+
+                    using (var sqlCopy = new SqlBulkCopy(connection))
                     {
-                        dr["Debit"] = 0;
-                        dr["Credit"] = 0;
+                        sqlCopy.DestinationTableName = "[Accountants]";
+                        sqlCopy.ColumnMappings.Add("Category", "Category");
+                        sqlCopy.ColumnMappings.Add("Credit", "Credit");
+                        sqlCopy.ColumnMappings.Add("Date", "Date");
+                        sqlCopy.ColumnMappings.Add("Debit", "Debit");
+                        sqlCopy.ColumnMappings.Add("Description", "Description");
+                        sqlCopy.ColumnMappings.Add("Transaction", "Transaction");
+                        sqlCopy.BatchSize = 500;
+                        sqlCopy.WriteToServer(dt);
                     }
                 }
-                dt.Columns.Remove("DebitCredit");
-
-                string connection = Configuration.GetConnectionString("EmployeeDBConnection");
-                
-                using (var sqlCopy = new SqlBulkCopy(connection))
+                else
                 {
-                    sqlCopy.DestinationTableName = "[Accountants]";
-                    sqlCopy.ColumnMappings.Add("Category", "Category");
-                    sqlCopy.ColumnMappings.Add("Credit", "Credit");
-                    sqlCopy.ColumnMappings.Add("Date", "Date");
-                    sqlCopy.ColumnMappings.Add("Debit", "Debit");
-                    sqlCopy.ColumnMappings.Add("Description", "Description");
-                    sqlCopy.ColumnMappings.Add("Transaction", "Transaction");
-                    sqlCopy.BatchSize = 500;
-                    sqlCopy.WriteToServer(dt);
-                }                
+                    ViewBag.ErrorMessage = "Excel do not contain correct columns. \n Excel Should have these columns only 'Date' 'Transaction' 'Description' 'Category' 'DebitCredit'";
+                    var model = await repo.GetAccountants();
+                    return View("Index", model);
+                }
+                FileInfo file = new FileInfo(filePath);
+                if (file.Exists)
+                {
+                    file.Delete();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ViewBag.ErrorMessage = "Excel do not contain correct columns. \n Excel Should have these columns only 'Date' 'Transaction' 'Description' 'Category' 'DebitCredit'";
-                var model = await repo.GetAccountants();
-                return View("Index", model);
+                log.saveerror(ex);
             }
-            FileInfo file = new FileInfo(filePath);
-            if(file.Exists)
-            {
-                file.Delete();
-            }
-
             ViewBag.ErrorMessage = "";
             return RedirectToAction("Index");
         }
@@ -229,11 +276,11 @@ namespace EmployeeManager2.Controllers
         {
             Accountants result = new Accountants();
             result.Category = Convert.ToString(row["Category"]);
-            result.Credit = (row["Credit"] == DBNull.Value) ? 0 : (decimal)row["Credit"];            
+            result.Credit = (row["Credit"] == DBNull.Value) ? 0 : (decimal)row["Credit"];
             result.Date = (row["Date"] == DBNull.Value) ? default : DateTime.Parse(Convert.ToString(row["Date"]));
-            result.Debit = (row["Debit"] == DBNull.Value) ? 0 : (decimal)row["Debit"]; 
+            result.Debit = (row["Debit"] == DBNull.Value) ? 0 : (decimal)row["Debit"];
             result.Description = Convert.ToString(row["Description"]);
-            result.Transaction = Convert.ToString(row["Transaction"]);            
+            result.Transaction = Convert.ToString(row["Transaction"]);
             return result;
         }
 

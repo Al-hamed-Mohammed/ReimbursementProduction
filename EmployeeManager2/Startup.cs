@@ -49,6 +49,7 @@ namespace EmployeeManager2
             services.AddControllersWithViews().AddXmlSerializerFormatters();
             services.AddScoped<IEmployeeRepository, SQLEmployeeRepository>();
             services.AddScoped<IAccountantRepo, AccountantRepo>();
+            services.AddScoped<IInsertErrorLog, InsertErrorLog>();
             services.AddRazorPages();
             services.AddAzureClients(builder =>
             {
