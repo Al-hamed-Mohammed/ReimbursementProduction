@@ -155,7 +155,8 @@ namespace EmployeeManager2.Controllers
                     }
                 }
             }
-            if(dt.Columns.Contains("DebitCredit"))
+            if(dt.Columns.Contains("DebitCredit") && dt.Columns.Contains("Transaction") && dt.Columns.Contains("Date")
+                 && dt.Columns.Contains("Description") && dt.Columns.Contains("Category"))
             {
                 dt.Columns.Add("Debit", typeof(decimal));
                 dt.Columns.Add("Credit", typeof(decimal));
@@ -198,7 +199,7 @@ namespace EmployeeManager2.Controllers
             }
             else
             {
-                ViewBag.ErrorMessage = "Excel do not contain the column with name DebitCredit. \n Excel Should have these columns in this order only 'Date' 'Transaction' 'Description' 'Category' 'DebitCredit'";
+                ViewBag.ErrorMessage = "Excel do not contain correct columns. \n Excel Should have these columns only 'Date' 'Transaction' 'Description' 'Category' 'DebitCredit'";
                 var model = await repo.GetAccountants();
                 return View("Index", model);
             }
