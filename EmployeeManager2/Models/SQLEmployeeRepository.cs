@@ -8,9 +8,12 @@ namespace EmployeeManager2.Models
     public class SQLEmployeeRepository : IEmployeeRepository
     {
         private readonly AppDbContext context;
-        public SQLEmployeeRepository(AppDbContext context)
+        private readonly IInsertErrorLog log;
+
+        public SQLEmployeeRepository(AppDbContext context, IInsertErrorLog log)
         {
             this.context = context;
+            this.log = log;
         }
         public Employee Add(Employee employee)
         {
@@ -22,7 +25,7 @@ namespace EmployeeManager2.Models
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return employee;
         }
@@ -40,7 +43,7 @@ namespace EmployeeManager2.Models
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return employee;
         }
@@ -61,7 +64,7 @@ namespace EmployeeManager2.Models
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return emp;
         }
@@ -76,7 +79,7 @@ namespace EmployeeManager2.Models
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return emp;
 
@@ -92,7 +95,7 @@ namespace EmployeeManager2.Models
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return emp;
         }
@@ -113,7 +116,7 @@ namespace EmployeeManager2.Models
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return employeeChanges;
         }

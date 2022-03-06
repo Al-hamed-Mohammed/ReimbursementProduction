@@ -17,16 +17,18 @@ namespace EmployeeManager2.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IHostingEnvironment hostingEnvironment;
+        private readonly IInsertErrorLog log;
 
-        public MileageController(AppDbContext context, IHostingEnvironment hostingEnvironment)
+        public MileageController(AppDbContext context, IHostingEnvironment hostingEnvironment, IInsertErrorLog log)
         {
             _context = context;
             this.hostingEnvironment = hostingEnvironment;
+            this.log = log;
         }
         public IActionResult Index()
         {
             return View();
-            
+
         }
         public IActionResult Privacy()
         {
@@ -82,7 +84,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return View();
         }
@@ -98,7 +100,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return View();
         }
@@ -120,7 +122,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return View();
         }
@@ -136,7 +138,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return View();
         }
@@ -157,7 +159,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return View();
 
@@ -173,7 +175,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return View();
         }
@@ -252,7 +254,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return RedirectToAction("List");
         }

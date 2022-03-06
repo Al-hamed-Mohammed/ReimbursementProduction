@@ -21,12 +21,14 @@ namespace EmployeeManager2.Controllers
     public class HomeController : Controller
     {
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IInsertErrorLog log;
         private readonly IHostingEnvironment hostingEnvironment;
         ImageService imageService = new ImageService();
-        public HomeController(IEmployeeRepository employeeRepository,
+        public HomeController(IEmployeeRepository employeeRepository, IInsertErrorLog log,
                               IHostingEnvironment hostingEnvironment)
         {
             _employeeRepository = employeeRepository;
+            this.log = log;
             this.hostingEnvironment = hostingEnvironment;
         }
         [HttpGet]
@@ -45,19 +47,19 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return View();
         }
-       
-       
+
+
 
 
         public ViewResult Details(int id)
         {
             try
             {
-                 HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
+                HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
                 {
                     Employee = _employeeRepository.GetEmployee(id),
                     PageTitle = "Employee Details"
@@ -67,7 +69,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
                 return View();
             }
         }
@@ -78,7 +80,7 @@ namespace EmployeeManager2.Controllers
         {
             return View();
         }
-        
+
         [HttpGet]
         //[Authorize(Roles = UtilityClass.AdminUserRole)]
         public ViewResult Edit(int id)
@@ -102,7 +104,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
                 return View();
             }
         }
@@ -128,7 +130,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
                 return View("Index");
             }
         }
@@ -149,7 +151,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
                 return RedirectToAction("Index");
             }
         }
@@ -227,7 +229,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
                 return RedirectToAction("Index");
             }
         }
@@ -266,7 +268,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return View();
         }
@@ -313,11 +315,11 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return View();
         }
-        
+
 
 
         public IActionResult Privacy()

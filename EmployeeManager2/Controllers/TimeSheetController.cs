@@ -15,10 +15,12 @@ namespace EmployeeManager2.Controllers
     public class TimeSheetController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IInsertErrorLog log;
 
-        public TimeSheetController(AppDbContext context)
+        public TimeSheetController(AppDbContext context, IInsertErrorLog log)
         {
             _context = context;
+            this.log = log;
         }
         public IActionResult Index()
         {
@@ -53,9 +55,9 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
-            
+
         }
 
         public IActionResult List()
@@ -71,7 +73,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return View();
         }
@@ -99,7 +101,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return View();
 
@@ -117,7 +119,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return View();
 
@@ -142,7 +144,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return View();
         }
@@ -158,7 +160,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return View();
         }
@@ -177,7 +179,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return View();
         }
@@ -192,7 +194,7 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
             return View();
         }
@@ -272,9 +274,9 @@ namespace EmployeeManager2.Controllers
             }
             catch (Exception ex)
             {
-                InsertErrorLog.saveerror(ex);
+                log.saveerror(ex);
             }
-          //  return View();
+            //  return View();
             return RedirectToAction("List");
         }
     }

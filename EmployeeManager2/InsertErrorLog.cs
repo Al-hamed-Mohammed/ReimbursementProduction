@@ -8,14 +8,17 @@ using System.Threading.Tasks;
 namespace EmployeeManager2
 {
 
-    public class InsertErrorLog
+    public class InsertErrorLog : IInsertErrorLog
     {
-        private static readonly AppDbContext _context;
-        private readonly IHostingEnvironment hostingEnvironment;
-        public static void saveerror(Exception ex)
+        private readonly AppDbContext context;
+
+        public InsertErrorLog(AppDbContext context)
         {
-            
-             ErrorLogs errorLogsmodel = new ErrorLogs();
+            this.context = context;
+        }
+        public void saveerror(Exception ex)
+        {
+            ErrorLogs errorLogsmodel = new ErrorLogs();
             string message = "";
             message += Environment.NewLine;
             message += "-----------------------------------------------------------";
@@ -37,10 +40,9 @@ namespace EmployeeManager2
             errorLogsmodel.ErrorMsg = message.ToString();
             errorLogsmodel.ErrorType = ex.GetType().Name.ToString();
             errorLogsmodel.CreatedOn = DateTime.Now;
-            _context.ErrorLogs.Add(errorLogsmodel); 
-            _context.SaveChanges();
-
-
+            
+            context.ErrorLogs.Add(errorLogsmodel);
+            context.SaveChanges();
         }
     }
 }
