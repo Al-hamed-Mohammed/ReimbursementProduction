@@ -1,4 +1,6 @@
-﻿using EmployeeManager2.Data;
+﻿using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Spreadsheet;
+using EmployeeManager2.Data;
 using EmployeeManager2.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -156,58 +158,91 @@ namespace EmployeeManager2.Controllers
                     return View("Index", model);
                 }
 
-                string conString = string.Empty;
-
-                switch (extension)
-                {
-                    case ".xls": //Excel 97-03.
-                        conString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES'";
-                        break;
-                    case ".xlsx": //Excel 07 and above.
-                        conString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES'";
-                        break;
-                    case ".xltx":
-                        conString = "Provider=Microsoft.ACE.OLEDB.16.0;Data Source=" + filePath + ";Extended Properties='Excel 8.0;HDR=YES'";
-                        break;
-                }
-
+                //Create a new DataTable.
                 DataTable dt = new DataTable();
-                conString = string.Format(conString, filePath);
 
-                using (OleDbConnection connExcel = new OleDbConnection(conString))
+                using (SpreadsheetDocument doc = SpreadsheetDocument.Open(filePath, false))
                 {
-                    using (OleDbCommand cmdExcel = new OleDbCommand())
+                    //Read the first Sheet from Excel file.
+                    Sheet sheet = doc.WorkbookPart.Workbook.Sheets.GetFirstChild<Sheet>();
+
+                    //Get the Worksheet instance.
+                    Worksheet worksheet = (doc.WorkbookPart.GetPartById(sheet.Id.Value) as WorksheetPart).Worksheet;
+
+                    //Fetch all the rows present in the Worksheet.
+                    IEnumerable<Row> rows = worksheet.GetFirstChild<SheetData>().Descendants<Row>();
+
+
+
+                    //Loop through the Worksheet rows.
+                    foreach (Row row in rows)
                     {
-                        using (OleDbDataAdapter odaExcel = new OleDbDataAdapter())
+                        //Use the first row to add columns to DataTable.
+                        if (row.RowIndex.Value == 1)
                         {
-                            cmdExcel.Connection = connExcel;
+                            foreach (Cell cell in row.Descendants<Cell>())
+                            {
+                                dt.Columns.Add(GetValue(doc, cell));
+                            }
+                        }
+                        else
+                        {
+                            //Add rows to DataTable.
+                            dt.Rows.Add();
+                            int i = 0;
+                            int datecount = 1;
+                            foreach (Cell cell in row.Descendants<Cell>())
+                            {
+                                var result = GetValue(doc, cell);
 
-                            //Get the name of First Sheet.
-                            connExcel.Open();
-                            DataTable dtExcelSchema;
-                            dtExcelSchema = connExcel.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, null);
-                            string sheetName = dtExcelSchema.Rows[0]["TABLE_NAME"].ToString();
-                            connExcel.Close();
+                                if(datecount == 1)
+                                {
+                                    result = DateTime.FromOADate(double.Parse(result)).ToShortDateString();
+                                    datecount = 2;
+                                }
 
-                            //Read Data from First Sheet.
-                            connExcel.Open();
-                            cmdExcel.CommandText = "SELECT * From [" + sheetName + "]";
-                            odaExcel.SelectCommand = cmdExcel;
-                            odaExcel.Fill(dt);
-                            connExcel.Close();
+                                var charector = cell.CellReference.Value.Count() > 1 ? cell.CellReference.Value.Substring(0, 1) : cell.CellReference.Value;
+
+                                switch (charector)
+                                {
+                                    case "A":
+                                        dt.Rows[dt.Rows.Count - 1][0] = result;
+                                        break;
+                                    case "B":
+                                        dt.Rows[dt.Rows.Count - 1][1] = result;
+                                        break;
+                                    case "C":
+                                        dt.Rows[dt.Rows.Count - 1][2] = result;
+                                        break;
+                                    case "D":
+                                        dt.Rows[dt.Rows.Count - 1][3] = result;
+                                        break;
+                                    case "E":
+                                        dt.Rows[dt.Rows.Count - 1][4] = result;
+                                        break;
+                                }
+                                //dt.Rows[dt.Rows.Count - 1][i] = result;
+                                //i++;
+                            }
                         }
                     }
                 }
+
                 if (dt.Columns.Contains("DebitCredit") && dt.Columns.Contains("Transaction") && dt.Columns.Contains("Date")
-                     && dt.Columns.Contains("Description") && dt.Columns.Contains("Category"))
+                 && dt.Columns.Contains("Description") && dt.Columns.Contains("Category"))
                 {
                     dt.Columns.Add("Debit", typeof(decimal));
                     dt.Columns.Add("Credit", typeof(decimal));
                     foreach (DataRow dr in dt.Rows)
                     {
-                        var m = dr.Field<dynamic>("DebitCredit");
-                        if (m != null)
+                        object value = dr["DebitCredit"];
+
+                        if (value != DBNull.Value)
                         {
+                            //var m = dr.Field<dynamic>("DebitCredit");
+                            var m = Double.Parse(value.ToString());
+                            //.   if (m != null)
+                            //  {
                             if (m <= 0)
                             {
                                 dr["Debit"] = m;
@@ -216,6 +251,7 @@ namespace EmployeeManager2.Controllers
                             {
                                 dr["Credit"] = m;
                             }
+                            //}                        
                         }
                         else
                         {
@@ -258,6 +294,16 @@ namespace EmployeeManager2.Controllers
             }
             ViewBag.ErrorMessage = "";
             return RedirectToAction("Index");
+        }
+
+        private string GetValue(SpreadsheetDocument doc, Cell cell)
+        {
+            string value = cell.CellValue.InnerText;
+            if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
+            {
+                return doc.WorkbookPart.SharedStringTablePart.SharedStringTable.ChildElements.GetItem(int.Parse(value)).InnerText;
+            }
+            return value;
         }
         public List<Accountants> ConvertDataTable(DataTable tbl)
         {
