@@ -190,10 +190,39 @@ namespace EmployeeManager2.Controllers
                             //Add rows to DataTable.
                             dt.Rows.Add();
                             int i = 0;
+                            int datecount = 1;
                             foreach (Cell cell in row.Descendants<Cell>())
                             {
-                                dt.Rows[dt.Rows.Count - 1][i] = GetValue(doc, cell);
-                                i++;
+                                var result = GetValue(doc, cell);
+
+                                if(datecount == 1)
+                                {
+                                    result = DateTime.FromOADate(double.Parse(result)).ToShortDateString();
+                                    datecount = 2;
+                                }
+
+                                var charector = cell.CellReference.Value.Count() > 1 ? cell.CellReference.Value.Substring(0, 1) : cell.CellReference.Value;
+
+                                switch (charector)
+                                {
+                                    case "A":
+                                        dt.Rows[dt.Rows.Count - 1][0] = result;
+                                        break;
+                                    case "B":
+                                        dt.Rows[dt.Rows.Count - 1][1] = result;
+                                        break;
+                                    case "C":
+                                        dt.Rows[dt.Rows.Count - 1][2] = result;
+                                        break;
+                                    case "D":
+                                        dt.Rows[dt.Rows.Count - 1][3] = result;
+                                        break;
+                                    case "E":
+                                        dt.Rows[dt.Rows.Count - 1][4] = result;
+                                        break;
+                                }
+                                //dt.Rows[dt.Rows.Count - 1][i] = result;
+                                //i++;
                             }
                         }
                     }
@@ -206,9 +235,14 @@ namespace EmployeeManager2.Controllers
                     dt.Columns.Add("Credit", typeof(decimal));
                     foreach (DataRow dr in dt.Rows)
                     {
-                        var m = dr.Field<dynamic>("DebitCredit");
-                        if (m != null)
+                        object value = dr["DebitCredit"];
+
+                        if (value != DBNull.Value)
                         {
+                            //var m = dr.Field<dynamic>("DebitCredit");
+                            var m = Double.Parse(value.ToString());
+                            //.   if (m != null)
+                            //  {
                             if (m <= 0)
                             {
                                 dr["Debit"] = m;
@@ -217,6 +251,7 @@ namespace EmployeeManager2.Controllers
                             {
                                 dr["Credit"] = m;
                             }
+                            //}                        
                         }
                         else
                         {
