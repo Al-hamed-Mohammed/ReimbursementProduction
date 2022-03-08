@@ -32,7 +32,7 @@ new { enctype = "multipart/form-data", onsubmit = "theButton.disabled = true; re
 
 
     @{
-        string[] pagerDropdown = new string[] { "5", "10", "15", "20", "50", "100" };
+        string[] pagerDropdown = new string[] {"10", "15", "20", "50", "100" };
         List<object> toolbarItems = new List<object>();
         //toolbarItems.Add("Add");
         toolbarItems.Add("Edit");
@@ -58,12 +58,13 @@ new { enctype = "multipart/form-data", onsubmit = "theButton.disabled = true; re
             <e-data-manager json="@Model.ToArray()" insertUrl="/Accountant/Add" updateUrl="/Accountant/Update" 
                             removeUrl="/Accountant/Delete" adaptor="RemoteSaveAdaptor"></e-data-manager>
             <e-grid-editsettings showDeleteConfirmDialog="true" allowAdding="true" allowDeleting="true" allowEditing="true"></e-grid-editsettings>
-            <e-grid-pagesettings pageSizes="pagerDropdown" pageSize="5"></e-grid-pagesettings>
+            <e-grid-pagesettings pageSizes="pagerDropdown" pageSize="10"></e-grid-pagesettings>
             <e-grid-columns>
                 <e-grid-column field="Id" headerText="Id" isPrimaryKey="true" width="0"></e-grid-column>
-                <e-grid-column field="Date" headerText="Date" editType="datepickeredit" format="yMd"></e-grid-column>
-                <e-grid-column field="Transaction" headerText="Transaction" width="240"></e-grid-column>
-                <e-grid-column field="Description" headerText="Description" width="320"></e-grid-column>
+                <e-grid-column field="Date" filter="@(new { ui= new { create = "onFilterCreate", write = "onFilterWrite" } })"
+                               headerText="Date" editType="datepickeredit" format="yMd"></e-grid-column>
+                <e-grid-column field="Transaction" headerText="Transaction"></e-grid-column>
+                <e-grid-column field="Description" headerText="Description"></e-grid-column>
                 <e-grid-column field="Category" headerText="Category"></e-grid-column>
                 <e-grid-column field="Debit" headerText="Debit" editType="numericedit"></e-grid-column>
                 <e-grid-column field="Credit" headerText="Credit" editType="numericedit"></e-grid-column>
@@ -100,5 +101,45 @@ new { enctype = "multipart/form-data", onsubmit = "theButton.disabled = true; re
             grid.aggregateModule.refresh(args.data);
             updateTotal();
         }
+    }
+
+    //code for Date Range Picker
+    var startDate;
+    var endDate;
+    var customFilter = false;
+
+    function onFilterCreate(args) {
+        // Input element is created and appended to the target element 
+        var flValInput = new ej.base.createElement('input', { className: 'flm-input' });
+        args.target.appendChild(flValInput);
+        // Date range picker is rendered and appended to the input element 
+        var dateRangeInst = new ej.calendars.DateRangePicker({
+            change: function (e) {
+                if (e != undefined && e.value) {
+                    var grid = document.getElementById("Grid").ej2_instances[0];
+                    // Get date values from date range picker 
+                    startDate = e.value[0];
+                    endDate = e.value[1];
+                    // Flag variable is used to identify this case in the Grid’s action begin event 
+                    customFilter = true;
+                    // Filter the required column with start date of the date range picker 
+                    // GridInstance.filterByColumn(Column field name, filter operator, filter value) 
+                    grid.filterByColumn('Date', 'greaterthan', startDate);
+                }
+            }
+        });
+        dateRangeInst.appendTo(flValInput);
+    }
+
+    function onActionBegin(args) {
+        // Check for filter column and flag enabled in date range picker’s change event 
+        if (args.requestType === "filtering" && args.currentFilteringColumn === "Date" && customFilter) {
+            customFilter = false;
+            // End date value is added as additional filter value with ‘lessthan’ filter operator 
+            args.columns.push({ actualFilterValue: {}, actualOperator: {}, field: "Date", ignoreAccent: false, isForeignKey: false, matchCase: false, operator: "lessthan", predicate: "and", uid: this.getColumnByField(args.currentFilteringColumn).uid, value: endDate });
+        }
+    }
+
+    function onFilterWrite(args) {
     }
 </script>
