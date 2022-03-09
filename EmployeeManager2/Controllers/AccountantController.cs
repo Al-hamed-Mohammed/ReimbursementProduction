@@ -151,9 +151,9 @@ namespace EmployeeManager2.Controllers
 
                 //get extension
                 string extension = Path.GetExtension(filename);
-                if (extension != ".xlsx")
+                if (extension != ".xlsx" && extension != ".xltx")
                 {
-                    ViewBag.ErrorMessage = "Please upload excel with file extension xlsx only.";
+                    ViewBag.ErrorMessage = "Please upload excel with file extension xlsx or xltx only.";
                     var model = await repo.GetAccountants();
                     return View("Index", model);
                 }
