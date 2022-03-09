@@ -108,7 +108,7 @@ namespace EmployeeManager2.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = UtilityClass.AdminUserRole)]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public IActionResult Edit(int id)
         {
             try
@@ -126,7 +126,7 @@ namespace EmployeeManager2.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = UtilityClass.AdminUserRole)]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public IActionResult Edit(TimeSheet ts)
         {
             try
@@ -150,7 +150,7 @@ namespace EmployeeManager2.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = UtilityClass.AdminUserRole)]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public IActionResult Delete(int id)
         {
             try
@@ -166,7 +166,7 @@ namespace EmployeeManager2.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = UtilityClass.AdminUserRole)]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public IActionResult Delete(TimeSheet ts)
         {
             try

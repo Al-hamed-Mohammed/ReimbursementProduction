@@ -110,7 +110,7 @@ namespace EmployeeManager2.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = UtilityClass.AdminUserRole)]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult> delete(int id)
         {
             try
@@ -273,7 +273,7 @@ namespace EmployeeManager2.Controllers
             return View();
         }
         [HttpPost]
-        [Authorize(Roles = UtilityClass.AdminUserRole)]
+        [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<IActionResult> Edit(EmployeeCreateViewModel model)
         {
             try
