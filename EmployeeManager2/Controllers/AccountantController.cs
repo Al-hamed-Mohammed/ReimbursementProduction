@@ -124,6 +124,7 @@ namespace EmployeeManager2.Controllers
         [HttpPost]
         public async Task<IActionResult> ImportExcelFile(IFormFile FormFile)
         {
+            string filePath = "";
             try
             {
                 if (FormFile == null)
@@ -143,7 +144,7 @@ namespace EmployeeManager2.Controllers
                 }
 
                 //get file path 
-                var filePath = Path.Combine(MainPath, FormFile.FileName);
+                filePath = Path.Combine(MainPath, FormFile.FileName);
                 using (System.IO.Stream stream = new FileStream(filePath, FileMode.Create))
                 {
                     await FormFile.CopyToAsync(stream);
@@ -278,19 +279,26 @@ namespace EmployeeManager2.Controllers
                 }
                 else
                 {
-                    ViewBag.ErrorMessage = "Excel do not contain correct columns. \n Excel Should have these columns only 'Date' 'Transaction' 'Description' 'Category' 'DebitCredit'";
+                    ViewBag.ErrorMessage = "Excel do not contain correct columns. Excel Should have these columns only 'Date' 'Transaction' 'Description' 'Category' 'DebitCredit'";
                     var model = await repo.GetAccountants();
                     return View("Index", model);
                 }
-                FileInfo file = new FileInfo(filePath);
-                if (file.Exists)
-                {
-                    file.Delete();
-                }
+                
             }
             catch (Exception ex)
             {
                 log.saveerror(ex);
+            }
+            finally
+            {
+                if (filePath != "")
+                {
+                    FileInfo file = new FileInfo(filePath);
+                    if (file.Exists)
+                    {
+                        file.Delete();
+                    }
+                }
             }
             ViewBag.ErrorMessage = "";
             return RedirectToAction("Index");
